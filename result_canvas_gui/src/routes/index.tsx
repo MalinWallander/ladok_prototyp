@@ -74,7 +74,7 @@ function Urval({ onBack }: { onBack: () => void }) {
   const [rader, setRader] = useState<StudentRad[] | null>(null);
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
-  const [urvalKey, setUrvalKey] = useState({ kurs: "", modul: "" });
+  const [urvalKey, setUrvalKey] = useState({ kurs: "", modul: "", nr: 0 });
 
   useEffect(() => { orch.hamtaKurser().then(setKurser).catch((e) => setErr(e.message)); }, []);
   useEffect(() => {
@@ -88,7 +88,7 @@ function Urval({ onBack }: { onBack: () => void }) {
     setLoading(true); setErr("");
     try {
       setRader(await orch.listaStudenter(kurs, uppgift, modul));
-      setUrvalKey({ kurs, modul });
+      setUrvalKey((k) => ({ kurs, modul, nr: k.nr + 1 }));
     } catch (e) { setErr((e as Error).message); }
     setLoading(false);
   };
@@ -122,7 +122,8 @@ function Urval({ onBack }: { onBack: () => void }) {
         </Button>
       </div>
       {err && <p className="text-sm text-destructive">{err}</p>}
-      {rader && <StudentLista rader={rader} setRader={setRader} kurs={urvalKey.kurs} modul={urvalKey.modul} />}
+      {/* Ny nyckel vid varje listning nollställer markeringar och felmeddelanden */}
+      {rader && <StudentLista key={urvalKey.nr} rader={rader} setRader={setRader} kurs={urvalKey.kurs} modul={urvalKey.modul} />}
     </div>
   );
 }
