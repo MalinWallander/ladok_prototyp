@@ -1,0 +1,7 @@
+{
+	"private": true,
+	"scripts": {
+		"dev": "npm --prefix result_canvas_gui run dev",
+		"setup": "npm --prefix result_canvas_gui install"
+	}
+}
